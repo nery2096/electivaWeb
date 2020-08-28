@@ -1,0 +1,5 @@
+en netbeans abrir ubicacion de archivo e ir a /etc/netbeans.conf
+y agregar -J-Djdk.lang.Process.allowAmbiguousCommands=true al principio de la linea netbeans_default_options=""
+por si no crea el proyecto Maven
+
+

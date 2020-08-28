@@ -3,3 +3,10 @@ y agregar -J-Djdk.lang.Process.allowAmbiguousCommands=true al principio de la li
 por si no crea el proyecto Maven
 
 
+Para crear las entidades desde la base de datos
+despues de configurar Wildfly con el datasource
+las librerias ya estan en el pom.xml
+click derecho en el proyecto->new->entity classes from database
+		    o proyecto->new->other->persistence->entity classes from database
+
+

@@ -50,6 +50,8 @@ public class funciones{
         }
     return filtedArray;
    }
+    
+   //RETORNA LA CANTIDAD DE PUNTOS DE ACUERDO AL MONTO DE LA OPERACION
    public int returnPuntos(int monto){
         int m=0;
         if (monto>=5000 && monto<=20000){
@@ -64,6 +66,8 @@ public class funciones{
         }
         return m;
     }
+   
+   //FUNCION QUE DESCUENTA DE LA BOLSA EL SALDO DE PUNTOS UTILIZADO
    public List<BolsaPuntos> descuentoBolsa(Integer idCliente,String idConcepto) throws ParseException{
         List<BolsaPuntos> results = new ArrayList<BolsaPuntos>();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
@@ -73,13 +77,13 @@ public class funciones{
         JSONArray json = new JSONArray(bolsaCliente.findAll_JSON(String.class));
         JSONObject jsonConcepto =  new JSONObject(concepto.find_JSON(String.class, idConcepto));
         //int flag=0;
-        int contador= jsonConcepto.getInt("puntosRequeridos");
+        int contador= jsonConcepto.getInt("puntosRequeridos");//SE DEFINE LOS PUNTOS REQUERIDOS DEL CONCEPTO DE USO
         for (int i = 0; i < json.length(); i++) {
             JSONObject row = json.getJSONObject(i);
             JSONObject idC = row.getJSONObject("idCliente");
             if (idC.getInt("id") == (idCliente)){
-                if(row.getInt("saldoPuntos")>0){
-                    if(contador > row.getInt("saldoPuntos")){
+                if(row.getInt("saldoPuntos")>0){    //SI EL SALDO DE PUNTOS ES MAYOR A CERO SE VERIFICARA SI PUEDE SER USADO 
+                    if(contador > row.getInt("saldoPuntos")){// SI LOS PUNTOS REQUERIDOS ES MAYOR AL SALDO 
                        bolsa.setIdCliente(returnCliente(idCliente.toString()));
                        bolsa.setId(row.getInt("id"));
                        Date date=formatter.parse(row.getString("fechaAsignacionPuntaje"));
@@ -88,12 +92,12 @@ public class funciones{
                        bolsa.setFechaCaducidadPuntaje(dateC);
                        bolsa.setMontoOperacion(row.getInt("montoOperacion"));
                        bolsa.setPuntajeAsignado(row.getInt("puntajeAsignado"));
-                       bolsa.setPuntajeUtilizado(row.getInt("saldoPuntos"));
-                       bolsa.setSaldoPuntos(0);
+                       bolsa.setPuntajeUtilizado(row.getInt("saldoPuntos"));// LO UTILIZADO ES IGUAL A LA TOTALIDAD DEL SALDO
+                       bolsa.setSaldoPuntos(0);// EL SALDO DE PUNTOS ES UTILIZADO EN SU 100%
                        bolsaCliente.edit_JSON(bolsa,String.valueOf(row.getInt("id")));
-                       contador=contador-row.getInt("saldoPuntos");
+                       contador=contador-row.getInt("saldoPuntos");// SE DESCUENTA DE LOS PUNTOS REQUERIDOS EL SALDO QUE FUE USADO
                        results.add(bolsa);
-                    }else if(contador <= row.getInt("puntajeAsignado")&& contador>0){
+                    }else if(contador <= row.getInt("puntajeAsignado")&& contador>0){ //SI LOS PUNTOS REQUERIDOS ES MENOR AL SALDO
                         bolsa.setIdCliente(returnCliente(idCliente.toString()));
                         bolsa.setId(row.getInt("id"));
                         Date date=formatter.parse(row.getString("fechaAsignacionPuntaje"));
@@ -102,8 +106,8 @@ public class funciones{
                         bolsa.setFechaCaducidadPuntaje(dateC);
                         bolsa.setMontoOperacion(row.getInt("montoOperacion"));
                         bolsa.setPuntajeAsignado(row.getInt("puntajeAsignado"));
-                        bolsa.setPuntajeUtilizado(contador);
-                        bolsa.setSaldoPuntos(row.getInt("saldoPuntos") - contador);
+                        bolsa.setPuntajeUtilizado(contador);// LO UTIILIZADO ES IGUAL AL CONTADOR
+                        bolsa.setSaldoPuntos(row.getInt("saldoPuntos") - contador);// EL SALDO DE PUNTOS ES IGUAL AL SALDO - EL CONTADOR
                         bolsaCliente.edit_JSON(bolsa,String.valueOf(row.getInt("id")));
                         contador=0;
                         results.add(bolsa);
@@ -111,8 +115,8 @@ public class funciones{
                 }
             }
         }
-
-    return results;
+    //SE RETORNA TODAS LAS BOLSAS QUE FUERON USADAS
+    return results; 
     }
    
    public Concepto returnConcepto(String idConcepto) throws ParseException{
@@ -145,6 +149,7 @@ public class funciones{
        
        return cliente;
    }
+   //RETORNA UNA FECHA MAS TREINTA DIAS
    public Date returnDaysPlus30(Date fecha){
        Calendar calendar = new GregorianCalendar();
        calendar.setTime(fecha);
@@ -187,6 +192,26 @@ public class funciones{
        
    }
    public List<Object> puntosAvencer(Integer dias) throws ParseException{
+        Date date = Calendar.getInstance().getTime();  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(date); 
+        bolsaPuntosREST b = new bolsaPuntosREST();
+        JSONArray jsonArray = new JSONArray(b.findAll_JSON(String.class));
+        JSONArray json = new JSONArray();
+        List<Object> results = new ArrayList<Object>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+           JSONObject row = jsonArray.getJSONObject(i);
+           LocalDate dateAfter = LocalDate.parse(row.getString("fechaCaducidadPuntaje"));
+           LocalDate dateBefore = LocalDate.parse(strDate);
+           long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+           if (noOfDaysBetween==dias){ // SI LA CANTIDAD DE DIAS ENTRE LA FECHA DE CADUCIDAD Y LA FECHA ACTUAL ES IGUAL A LA CANTIDAD DE DIAS
+               json.put(row);           //PASADO EN EL PARAMETRO SE AGREGA LA BOLSA EN EL json para enviar
+           }
+        }
+        results.add(((JSONArray)json).toList());
+    return results;
+   }
+    public void borrarSaldoPuntos() throws ParseException{
         Gson gson=new GsonBuilder().create();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-mm-dd"); 
         Date date = Calendar.getInstance().getTime();  
@@ -195,37 +220,30 @@ public class funciones{
         bolsaPuntosREST b = new bolsaPuntosREST();
         BolsaPuntos bolsa =  new BolsaPuntos();
         JSONArray jsonArray = new JSONArray(b.findAll_JSON(String.class));
-        JSONArray json = new JSONArray();
-        List<Object> results = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            
            JSONObject row = jsonArray.getJSONObject(i);
-           JSONObject jsonResponse = row.getJSONObject("idCliente");
+           JSONObject jsonResponse= row.getJSONObject("idCliente");
            LocalDate dateAfter = LocalDate.parse(row.getString("fechaCaducidadPuntaje"));
            LocalDate dateBefore = LocalDate.parse(strDate);
            long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-           if (noOfDaysBetween==dias){
-               json.put(row);
-           }else if(noOfDaysBetween==0){
-               System.out.println("Se borro el dia de hoy un registro");
+           if(noOfDaysBetween==0){
+               //UserIdentifier userIdentifier = gson.fromJson(jsonResponse.getJSONObject("userIdentifier").toString(), UserIdentifier.class);
+               System.out.println("Se borro el dia de hoy un registro de saldo de puntos");
                bolsa.setId(row.getInt("id"));
-               String jsonUserIdentifier = String.valueOf(jsonResponse.getInt("id"));
-               Cliente cliente=gson.fromJson(jsonUserIdentifier ,Cliente.class);
+               Cliente cliente=gson.fromJson(jsonResponse.toString() ,Cliente.class);
                bolsa.setIdCliente(cliente);
                bolsa.setMontoOperacion(row.getInt("montoOperacion"));
-               Date dateAsignacion=formatter.parse(row.getString("fechaAsignacionpuntaje"));
+               Date dateAsignacion=formatter.parse(row.getString("fechaAsignacionPuntaje"));
                bolsa.setFechaAsignacionPuntaje(dateAsignacion);
-               Date dateCaducidad=formatter.parse(row.getString("fechaCaducidadpuntaje"));
-               bolsa.setFechaAsignacionPuntaje(dateCaducidad);
+               Date dateCaducidad=formatter.parse(row.getString("fechaCaducidadPuntaje"));
+               bolsa.setFechaCaducidadPuntaje(dateCaducidad);
                bolsa.setPuntajeAsignado(row.getInt("puntajeAsignado"));
                bolsa.setPuntajeUtilizado(row.getInt("puntajeUtilizado"));
                bolsa.setSaldoPuntos(0);
                b.edit_JSON(bolsa,String.valueOf(row.getInt("id")));
            }
         }
-        results.add(((JSONArray)json).toList());
-    return results;
-   }
+    }
    
    public List<Object> bolsaCliente(Integer idCliente ){
         bolsaPuntosREST bolsaCliente = new bolsaPuntosREST();

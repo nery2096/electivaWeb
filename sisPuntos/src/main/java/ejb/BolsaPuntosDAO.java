@@ -44,6 +44,7 @@ public class BolsaPuntosDAO extends AbstractFacade<BolsaPuntos> {
     public void create(BolsaPuntos entity) {
         super.create(entity);
     }
+    //UTILIZA LOS PUNTOS DE LA BOLSA DE UN CLIENTE
     @POST
     @Path("utilizarpuntos/{idCliente}/{idConcepto}")
     public void utilizarPuntos(@PathParam("idCliente") String idCliente,@PathParam("idConcepto") String idConcepto) throws ParseException {
@@ -53,6 +54,7 @@ public class BolsaPuntosDAO extends AbstractFacade<BolsaPuntos> {
         super.utilizarPuntosDetalles(idCliente,idConcepto,usoCab);
         
     }
+    //CARGA UNA BOLSA CON EL IDCLIENTE Y MONTO 
     @POST
     @Path("carga/{idCliente}/{monto}")
     public void cargaPuntos(@PathParam("idCliente") String idCliente,@PathParam("monto") Integer monto) throws ParseException {
@@ -78,12 +80,14 @@ public class BolsaPuntosDAO extends AbstractFacade<BolsaPuntos> {
         return super.find(id);
     }
     
+    //DEVUELVE LA CANTIDAD DE PUNTOS DE ACUERDO AL MONTO DE LA COMPRA
     @GET
     @Path("puntosmontos/{monto}")
     @Produces(MediaType.TEXT_PLAIN)
     public String puntosMontos(@PathParam("monto") Integer monto) {
         return super.puntosMontos(monto);
     }
+    //DEVUELVE LAS BOLSAS A VENCER EN X DIAS
     @GET
     @Path("puntosavencer/{dias}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,6 +114,7 @@ public class BolsaPuntosDAO extends AbstractFacade<BolsaPuntos> {
     public String countREST() {
         return String.valueOf(super.count());
     }
+    //DEVUELVE LAS BOLSAS POR CLIENTE
     @GET
     @Path("bolsacliente/{idCliente}")
     @Produces(MediaType.APPLICATION_JSON)

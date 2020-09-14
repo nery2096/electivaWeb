@@ -62,12 +62,14 @@ public class UsoPuntosCabDAO extends AbstractFacade<UsoPuntosCab> {
     public UsoPuntosCab find(@PathParam("id") Integer id) {
         return super.find(id);
     }
+    //DEVUELVE LAS USO DE PUNTOS POR FECHA
     @GET
     @Path("usopuntosfecha/{fechaUso}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Object> findUsoFecha(@PathParam("fechaUso") String fechaUso) throws ParseException {
         return super.findUsoFecha(fechaUso);
     }
+    //DEVUELVE LAS USO DE PUNTOS POR CLIENTE
     @GET
     @Path("usopuntoscliente/{idCliente}")
     @Produces(MediaType.APPLICATION_JSON)

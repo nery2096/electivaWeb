@@ -83,18 +83,21 @@ public class ClienteDAO extends AbstractFacade<Cliente> {
     public String countREST() {
         return String.valueOf(super.count());
     }
+    //DEVUELVE EL CLIENTE APROXIMADO DE ACUERDO AL NOMBRE
     @GET
     @Path("clientesfn/{nombre}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Cliente> findNombres(@PathParam("nombre") String nombre) {
         return super.findNombres(nombre);
     }
+    //DEVUELVE EL CLIENTE APROXIMADO DE ACUERDO AL APELLIDO
     @GET
     @Path("clientesln/{apellido}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Cliente> findApellidos(@PathParam("apellido") String apellido) {
         return super.findApellidos(apellido);
     }
+    //DEVUELVE EL CLIENTE CON EL CUMPLEANHOS EN LA FECHA
     @GET
     @Path("clientesbday/{fecha}")
     @Produces(MediaType.APPLICATION_JSON)

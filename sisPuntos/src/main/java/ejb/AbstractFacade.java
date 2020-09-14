@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.Schedule;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import modelos.BolsaPuntos;
@@ -132,12 +133,16 @@ public abstract class AbstractFacade<T> {
         List<Cliente> resultList = query.getResultList();
         return (List<T>) resultList;
     }
-
+    
     List<Object> findPuntosAvencer(Integer dias) throws ParseException {
         funciones f = new funciones();
         return f.puntosAvencer(dias);
     }
-
+    @Schedule(dayOfWeek="Mon", hour="13",minute="28")
+    public void borrarSaldo() throws ParseException{
+        funciones f = new funciones();
+        f.borrarSaldoPuntos();
+    }
     List<Object> bolsaPorCliente(Integer idCliente) {
         funciones f = new funciones();
         return f.bolsaCliente(idCliente);

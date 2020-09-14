@@ -1,0 +1,5 @@
+insert into bolsa_puntos (id_cliente, fecha_asignacion_puntaje, puntaje_asignado, puntaje_utilizado, saldo_puntos, monto_operacion, fecha_caducidad_puntaje) values (1, '27/09/2019', 44, 18, 97, 5444, '02/10/2019');
+insert into bolsa_puntos (id_cliente, fecha_asignacion_puntaje, puntaje_asignado, puntaje_utilizado, saldo_puntos, monto_operacion, fecha_caducidad_puntaje) values (2, '21/09/2019', 45, 81, 16, 6861, '26/10/2019');
+insert into bolsa_puntos (id_cliente, fecha_asignacion_puntaje, puntaje_asignado, puntaje_utilizado, saldo_puntos, monto_operacion, fecha_caducidad_puntaje) values (3, '10/09/2019', 87, 52, 20, 5252, '18/10/2019');
+insert into bolsa_puntos (id_cliente, fecha_asignacion_puntaje, puntaje_asignado, puntaje_utilizado, saldo_puntos, monto_operacion, fecha_caducidad_puntaje) values (4, '28/09/2019', 90, 85, 4, 5836, '22/10/2019');
+insert into bolsa_puntos (id_cliente, fecha_asignacion_puntaje, puntaje_asignado, puntaje_utilizado, saldo_puntos, monto_operacion, fecha_caducidad_puntaje) values (5, '07/09/2019', 62, 63, 69, 8617, '15/10/2019');

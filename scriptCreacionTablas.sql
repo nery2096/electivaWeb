@@ -7,7 +7,7 @@ create table cliente(
 	nacionalidad character varying (30) NOT null,
 	email text not null unique,
 	telefono text not null,
-	fecha_nacimiento date,
+	fecha_nacimiento timestamp with time zone NOT NULL,
 	CHECK (tipo_documento=1 or tipo_documento=2 or tipo_documento=3)
 )WITH (
     OIDS = FALSE
@@ -35,9 +35,9 @@ TABLESPACE pg_default;
 
 create table vencimientos_puntos(
 	id serial primary key,
-	fecha_inicio date not null,
+	fecha_inicio timestamp with time zone NOT NULL,
 	dias_duracion_puntos integer not null,
-	fecha_fin date
+	fecha_fin timestamp with time zone
 )WITH (
     OIDS = FALSE
 )
@@ -46,7 +46,8 @@ TABLESPACE pg_default;
 create table bolsa_puntos(
 	id serial primary key,
 	id_cliente integer null,
-	fecha_asignacion_puntaje date,
+	fecha_asignacion_puntaje timestamp with time zone NOT NULL,
+	fecha_caducidad_puntaje timestamp with time zone NOT NULL,
 	puntaje_asignado integer not null,
 	puntaje_utilizado integer not null,
 	saldo_puntos integer not null,
@@ -64,7 +65,7 @@ create table uso_puntos_cab(
 	id serial primary key,
 	id_cliente integer not null,
 	puntaje_utilizado integer not null,
-	fecha date,
+	fecha timestamp with time zone NOT NULL,
 	id_concepto integer not null,
 	CONSTRAINT fk_id_cliente_cab FOREIGN KEY (id_cliente)
         REFERENCES public.cliente (id) MATCH SIMPLE
@@ -74,10 +75,14 @@ create table uso_puntos_cab(
     OIDS = FALSE
 )
 TABLESPACE pg_default;
+ALTER TABLE uso_puntos_cab
+ADD CONSTRAINT id_concepto_fk
+FOREIGN KEY (id_concepto)
+REFERENCES concepto(id)
+ON DELETE CASCADE;
 
 create table uso_puntos_det(
-	id serial primary key,
-	id_uso_puntos_cab integer not null,
+	id_uso_puntos_cab integer not null PRIMARY KEY,
 	puntaje_utilizado integer not null,
 	id_bolsa integer not null,
 	CONSTRAINT fk_id_uso_puntos_cab FOREIGN KEY (id_uso_puntos_cab)
@@ -92,3 +97,5 @@ create table uso_puntos_det(
     OIDS = FALSE
 )
 TABLESPACE pg_default;
+
+

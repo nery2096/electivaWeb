@@ -8,9 +8,7 @@ package ejb;
 import REST.bolsaPuntosREST;
 import REST.usoPuntosCabREST;
 import REST.usoPuntosDetREST;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Schedule;
@@ -157,11 +155,14 @@ public abstract class AbstractFacade<T> {
         return f.usoPuntosClientes(idCliente);
     }
     
-    List<T> findUsoCliente(Integer idCliente) {
-        Query query = getEntityManager().createQuery(
-              "SELECT c.idCliente FROM UsoPuntosCab c WHERE c.idCliente ="+idCliente);
-        List<UsoPuntosCab> resultList = query.getResultList();
-        return (List<T>) resultList;
+    List<Object> findUsoConcepto(Integer idConcepto) {
+        funciones f =  new funciones();
+        return f.usoPuntosConcepto(idConcepto);
+    }
+
+    List<Object> findPuntosPorRango(Integer from, Integer to) {
+        funciones f = new funciones();
+        return f.puntosPorRango(from, to);
     }
     
 }   

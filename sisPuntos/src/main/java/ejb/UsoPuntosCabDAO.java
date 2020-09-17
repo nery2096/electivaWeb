@@ -76,6 +76,13 @@ public class UsoPuntosCabDAO extends AbstractFacade<UsoPuntosCab> {
     public List<Object> findUsoClientes(@PathParam("idCliente") Integer idCliente) throws ParseException {
         return super.findUsoClientes(idCliente);
     }
+    //DEVUELVE LAS USO DE PUNTOS POR CONCEPTO DE USO
+    @GET
+    @Path("usopuntosconcepto/{idConcepto}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Object> findUsoConcepto(@PathParam("idConcepto") Integer idConcepto){
+        return super.findUsoConcepto(idConcepto);
+    }
     @GET
     @Override
     @Produces(MediaType.APPLICATION_JSON)

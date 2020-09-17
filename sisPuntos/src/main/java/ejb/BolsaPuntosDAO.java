@@ -94,6 +94,13 @@ public class BolsaPuntosDAO extends AbstractFacade<BolsaPuntos> {
     public List<Object> findPuntosAvencer(@PathParam("dias") Integer dias) throws ParseException {
         return super.findPuntosAvencer(dias);
     }
+    //DEVUELVE LAS BOLSAS A VENCER EN X DIAS
+    @GET
+    @Path("bolsarango/{from}/{to}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Object> findPuntosPorRango(@PathParam("from") Integer from,@PathParam("to") Integer to){
+        return super.findPuntosPorRango(from,to);
+    }
     @GET
     @Override
     @Produces(MediaType.APPLICATION_JSON)

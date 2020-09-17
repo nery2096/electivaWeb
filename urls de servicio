@@ -1,5 +1,0 @@
-//USO DE PUNTOS POR FECHA
-http://127.0.0.1:8080/sisPuntos-v1/webresources/modelos.usopuntoscab/usopuntosfecha/{fecha}
-
-//USO DE PUNTOS POR CLIENTE
-http://127.0.0.1:8080/sisPuntos-v1/webresources/modelos.usopuntoscab/usopuntoscliente/{idCliente}

@@ -191,6 +191,22 @@ public class funciones{
        return results;
        
    }
+   public List<Object> usoPuntosConcepto(Integer idConcepto){
+       usoPuntosCabREST usoCab = new usoPuntosCabREST();
+       JSONArray json = new JSONArray(usoCab.findAll(String.class));
+       JSONArray jsonClientes = new JSONArray();
+       List<Object> results = new ArrayList<Object>();
+       for (int i = 0; i < json.length(); i++) {
+            JSONObject row = json.getJSONObject(i);
+            JSONObject idC = row.getJSONObject("idConcepto");
+            if(idC.getInt("id")==idConcepto){
+               jsonClientes.put(row);
+           }
+       }
+       results.add(((JSONArray)jsonClientes).toList());
+       return results;
+       
+   }
    public List<Object> puntosAvencer(Integer dias) throws ParseException{
         Date date = Calendar.getInstance().getTime();  
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -211,6 +227,20 @@ public class funciones{
         results.add(((JSONArray)json).toList());
     return results;
    }
+   public List<Object> puntosPorRango(Integer from, Integer to){
+       bolsaPuntosREST bolsa = new bolsaPuntosREST();
+       JSONArray json = new JSONArray(bolsa.findAll_JSON(String.class));
+       JSONArray jsonBolsa = new JSONArray();
+       List<Object> results = new ArrayList<Object>();
+       for (int i = 0; i < json.length(); i++) {
+            JSONObject row = json.getJSONObject(i);
+            if(row.getInt("saldoPuntos")>=from && row.getInt("saldoPuntos")<=to){
+               jsonBolsa.put(row);
+           }
+       }
+       results.add(((JSONArray)jsonBolsa).toList());
+       return results;
+   }
     public void borrarSaldoPuntos() throws ParseException{
         Gson gson=new GsonBuilder().create();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-mm-dd"); 
@@ -226,7 +256,7 @@ public class funciones{
            LocalDate dateAfter = LocalDate.parse(row.getString("fechaCaducidadPuntaje"));
            LocalDate dateBefore = LocalDate.parse(strDate);
            long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-           if(noOfDaysBetween==0){
+           if(noOfDaysBetween==0){//si la cantidad de dias entre la fecha actual y la fecha de caducidad es CERO
                //UserIdentifier userIdentifier = gson.fromJson(jsonResponse.getJSONObject("userIdentifier").toString(), UserIdentifier.class);
                System.out.println("Se borro el dia de hoy un registro de saldo de puntos");
                bolsa.setId(row.getInt("id"));
@@ -240,7 +270,7 @@ public class funciones{
                bolsa.setPuntajeAsignado(row.getInt("puntajeAsignado"));
                bolsa.setPuntajeUtilizado(row.getInt("puntajeUtilizado"));
                bolsa.setSaldoPuntos(0);
-               b.edit_JSON(bolsa,String.valueOf(row.getInt("id")));
+               b.edit_JSON(bolsa,String.valueOf(row.getInt("id")));//SE ACTUALIZA EL SALDO DE PUNTOS CON CERO
            }
         }
     }

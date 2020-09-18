@@ -1,0 +1,14 @@
+NETBEANS 8.2
+POSTGRES 9.6
+WILDFLY 18.0.1
+
+añadir el server wildfly en netbeans
+añadir el datasource JDNI:java:/PostgresDS url:jdbc:postgresql://localhost:5432/{database}en wildfly
+correr el script en la base de datos {database}
+
+Clonar el repositorio
+abrir el proyecto maven en Netbeans
+correr el proyecto
+seleccionar el server wildfly instalado en netbeans para realizar el deploy
+
+
